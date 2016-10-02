@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 namespace Monster3D\Shortener;
-
 use Monster3D\Shortener\Interfaces\DriverInterface;
 use Monster3D\Shortener\RequestDriver;
 use Monster3D\Shortener\Config;
+use Monster3D\Shortener\Exceptions\ShortenerException;
 
 
 /**
