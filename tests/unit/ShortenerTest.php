@@ -61,9 +61,63 @@
      {
          $shortener = new Shortener('test');
      }
+
+     /**
+     * Test execute 
+     *
+     */
      public function testExecute()
      {
-         
+         $shortener = new Shortener('http://test.ru/');
+
+         $driver = $this->getMockBuilder('Monster3D\Shortener\RequestDriver')
+                ->setMethods(['execute'])
+                ->disableOriginalConstructor()
+                ->getMock();
+
+         $driver->expects($this->once())
+                ->method('execute')
+                ->will($this->returnValue(new \stdClass()));
+
+         $driver->init([]);
+         $result = $shortener->execute($driver);
+         $this->assertInstanceOf('\stdClass', $result);
+     }
+     
+     /**
+     * Test execute without contract 
+     *
+     * @expectedException Monster3D\Shortener\Exceptions\ShortenerException
+     *
+     */
+     public function testExecuteWithoutDriverContract()
+     {
+         $shortener = new Shortener('http://test.ru/');
+         $shortener->execute($this->getMock('WithOutContract'));
+     }
+
+     /**
+     * Test execute if RequestDriver return invalid result
+     *
+     * @expectedException Monster3D\Shortener\Exceptions\ShortenerException 
+     *
+     */
+     public function testExecuteDriverReturnError()
+     {
+         $shortener = new Shortener('http://test.ru/');
+
+         $driver = $this->getMockBuilder('Monster3D\Shortener\RequestDriver')
+                ->setMethods(['execute'])
+                ->disableOriginalConstructor()
+                ->getMock();
+
+         $driver->expects($this->once())
+                ->method('execute')
+                ->will($this->returnValue($this->getMock('TestClass')));
+
+         $driver->init([]);
+         $result = $shortener->execute($driver);
+         $this->assertInstanceOf('\stdClass', $result);
      }
 
  }
